@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +42,7 @@ public class UserControllerTest {
         request.setPassword("passwordTest");
         request.setConfirmPassword("passwordTest");
 
-        when(bCryptPasswordEncoder.encode("passwordTest")).thenReturn("HashedPassword");
+        when(this.bCryptPasswordEncoder.encode("passwordTest")).thenReturn("HashedPassword");
         final ResponseEntity<User> response = this.userController.createUser(request);
 
         Assert.assertNotNull(response);
@@ -53,5 +55,38 @@ public class UserControllerTest {
 
 
         Assert.assertEquals("HashedPassword",user.getPassword());
+    }
+
+    @Test
+    public void getUserByUsername(){
+        /* Create the user */
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUsername("usernameToSearch");
+        request.setPassword("passwordTest");
+        request.setConfirmPassword("passwordTest");
+        final ResponseEntity<User> response = this.userController.createUser(request);
+
+        User user = response.getBody();
+        /* Find it */
+        System.out.println("username from User : " + user.getUsername());
+       /* User user = userRepository.findByUsername(username); */
+        when(this.userRepository.findByUsername("usernameToSearch")).thenReturn(user);
+        Assert.assertEquals("usernameToSearch",user.getUsername());
+    }
+
+    @Test
+    public void findByIdTest(){
+        /* Create the user */
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUsername("usernameToSearch");
+        request.setPassword("passwordTest");
+        request.setConfirmPassword("passwordTest");
+        final ResponseEntity<User> response = this.userController.createUser(request);
+
+        User user = response.getBody();
+
+        /* Find it */
+        when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        Assert.assertEquals(0,user.getId());
     }
 }

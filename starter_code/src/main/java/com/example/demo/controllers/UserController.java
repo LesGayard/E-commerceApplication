@@ -36,6 +36,7 @@ public class UserController {
 
 	Logger log = LoggerFactory.getLogger(UserController.class);
 
+
 	@GetMapping("/id/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		return ResponseEntity.of(userRepository.findById(id));
@@ -44,7 +45,15 @@ public class UserController {
 	@GetMapping("/{username}")
 	public ResponseEntity<User> findByUserName(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
-		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+		log.info("Username to search : " + username);
+		if(user == null){
+			log.error("User null cannot find it");
+			return ResponseEntity.notFound().build();
+		}else{
+			log.info("user found !");
+			return ResponseEntity.ok(user);
+		}
+		//return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
 	
 	@PostMapping("/create")
