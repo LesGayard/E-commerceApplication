@@ -8,6 +8,8 @@ import com.example.demo.model.requests.CreateUserRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -26,6 +28,8 @@ public class UserControllerTest {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = mock(BCryptPasswordEncoder.class);
 
+    private Logger logger = LoggerFactory.getLogger(UserControllerTest.class);
+
     @Before
     public void setup(){
         this.userController = new UserController();
@@ -35,7 +39,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser(){
+    public void createUserTest(){
 
         CreateUserRequest request = new CreateUserRequest();
         request.setUsername("UsernameTest");
@@ -58,7 +62,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUserByUsername(){
+    public void getUserByUsernameTest(){
         /* Create the user */
         CreateUserRequest request = new CreateUserRequest();
         request.setUsername("usernameToSearch");
@@ -68,7 +72,7 @@ public class UserControllerTest {
 
         User user = response.getBody();
         /* Find it */
-        System.out.println("username from User : " + user.getUsername());
+        logger.info("username from User : " + user.getUsername());
        /* User user = userRepository.findByUsername(username); */
         when(this.userRepository.findByUsername("usernameToSearch")).thenReturn(user);
         Assert.assertEquals("usernameToSearch",user.getUsername());
