@@ -89,6 +89,7 @@ public class TestUtils {
         return item;
     }
 
+
     public static List<UserOrder> createOrders(){
         List<UserOrder> orders = new ArrayList<>();
 
@@ -104,5 +105,16 @@ public class TestUtils {
             orders.add(order);
         });
         return orders;
+    }
+
+    public static UserOrder createOrder(){
+        UserOrder order = new UserOrder();
+        Cart cart = createCart(createUser());
+
+        order.setItems(cart.getItems());
+        order.setUser(cart.getUser());
+        order.setTotal(cart.getTotal());
+
+        return order;
     }
 }
